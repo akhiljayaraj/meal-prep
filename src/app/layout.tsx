@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
 import BottomNav from '@/components/BottomNav'
+import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar'
 
 const geist = Geist({ subsets: ['latin'] })
 
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${geist.className} antialiased`}>
+        <ServiceWorkerRegistrar />
         <main className="max-w-lg mx-auto pb-20 min-h-screen">
           {children}
         </main>
