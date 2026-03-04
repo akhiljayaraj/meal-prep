@@ -18,6 +18,16 @@ async function getOrCreateCurrentMenu(supabase: Awaited<ReturnType<typeof create
       .select()
       .single()
     menu = data
+
+    // insert may fail on unique conflict (race condition) — retry select
+    if (!menu) {
+      const { data: existing } = await supabase
+        .from('weekly_menus')
+        .select('*')
+        .eq('week_start_date', weekStart)
+        .single()
+      menu = existing
+    }
   }
   return menu
 }
@@ -25,6 +35,8 @@ async function getOrCreateCurrentMenu(supabase: Awaited<ReturnType<typeof create
 export default async function MenuPage() {
   const supabase = await createClient()
   const menu = await getOrCreateCurrentMenu(supabase)
+  if (!menu) return <div className="p-4 text-gray-500">Unable to load menu. Please refresh.</div>
+
   const { data: menuRecipes } = await supabase
     .from('menu_recipes')
     .select('*, recipe:recipes(*)')
