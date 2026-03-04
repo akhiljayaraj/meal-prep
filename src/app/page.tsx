@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getWeekStartString, formatWeekLabel } from '@/lib/utils/dates'
 import MenuPageClient from './MenuPageClient'
@@ -26,8 +25,6 @@ async function getOrCreateCurrentMenu(supabase: Awaited<ReturnType<typeof create
 export default async function MenuPage() {
   const supabase = await createClient()
   const menu = await getOrCreateCurrentMenu(supabase)
-  if (!menu) redirect('/login')
-
   const { data: menuRecipes } = await supabase
     .from('menu_recipes')
     .select('*, recipe:recipes(*)')
