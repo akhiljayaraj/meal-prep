@@ -15,11 +15,9 @@ export default function RecipePickerClient({ recipes, menuId, existingIds }: Pro
 
   async function addRecipe(recipeId: string) {
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
     await supabase.from('menu_recipes').insert({
       menu_id: menuId,
       recipe_id: recipeId,
-      added_by: user!.id,
     })
     router.push('/')
     router.refresh()

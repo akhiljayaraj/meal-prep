@@ -30,9 +30,8 @@ export default function AddToWeekButton({ recipeId }: { recipeId: string }) {
       menu = data
     }
 
-    const { data: { user } } = await supabase.auth.getUser()
     await supabase.from('menu_recipes').upsert(
-      { menu_id: menu!.id, recipe_id: recipeId, added_by: user!.id },
+      { menu_id: menu!.id, recipe_id: recipeId },
       { onConflict: 'menu_id,recipe_id' }
     )
 

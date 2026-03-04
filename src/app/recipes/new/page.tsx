@@ -29,12 +29,11 @@ export default function NewRecipePage() {
     if (!title.trim()) return
     setSaving(true)
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
 
     let finalImageUrl = imageUrl
     if (imageFile) {
       const ext = imageFile.name.split('.').pop()
-      const path = `${user!.id}/${Date.now()}.${ext}`
+      const path = `recipes/${Date.now()}.${ext}`
       const { data } = await supabase.storage.from('recipe-images').upload(path, imageFile)
       if (data) {
         const { data: { publicUrl } } = supabase.storage.from('recipe-images').getPublicUrl(data.path)
@@ -47,7 +46,7 @@ export default function NewRecipePage() {
       description: description.trim() || null,
       image_url: finalImageUrl || null,
       ingredients,
-      created_by: user!.id,
+      created_by: null,
     })
 
     router.push('/recipes')
